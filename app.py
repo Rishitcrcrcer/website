@@ -71,6 +71,12 @@ TRANSACTION_COST = 0.0002
 def load_data(oos_file, price_file):
     oos_df = pd.read_csv(oos_file, index_col=0, parse_dates=True)
 
+    # If the OOS file already has a close/price column, drop it so the join
+    # doesn't collide with price_df's close column.
+    existing_close_cols = [c for c in oos_df.columns if c.lower() in ("close", "price")]
+    if existing_close_cols:
+        oos_df = oos_df.drop(columns=existing_close_cols)
+
     price_df = pd.read_csv(price_file, skiprows=[1, 2], index_col=0, parse_dates=True)
     price_df.columns = price_df.columns.str.strip().str.lower()
     close_col = [c for c in price_df.columns if "close" in c or "price" in c][0]
