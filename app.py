@@ -206,33 +206,26 @@ def drawdown_series(cum):
 st.sidebar.title("📈 HMM Strategy Dashboard")
 st.sidebar.markdown("---")
 
-st.sidebar.subheader("1️⃣ Data")
 default_oos = "hmm_oos_results.csv"
 default_price = "price_data.csv"
 
-oos_upload = st.sidebar.file_uploader("HMM OOS results CSV", type=["csv"])
-price_upload = st.sidebar.file_uploader("Price data CSV", type=["csv"])
-
-oos_source = oos_upload if oos_upload is not None else default_oos
-price_source = price_upload if price_upload is not None else default_price
-
 try:
-    oos_df = load_data(oos_source, price_source)
+    oos_df = load_data(default_oos, default_price)
     data_ok = True
 except Exception as e:
     data_ok = False
     st.sidebar.error(f"Could not load data: {e}")
     st.error(
         "⚠️ Could not find/read the data files.\n\n"
-        "Upload **hmm_oos_results.csv** and **price_data.csv** using the sidebar, "
-        "or place them in the same folder as this app."
+        "Make sure **hmm_oos_results.csv** and **price_data.csv** are placed in the "
+        "same folder as this app."
     )
     st.stop()
 
 st.sidebar.success(f"✅ Loaded {len(oos_df)} rows\n{oos_df.index[0].date()} → {oos_df.index[-1].date()}")
 
 st.sidebar.markdown("---")
-st.sidebar.subheader("2️⃣ Choose Strategy")
+st.sidebar.subheader("1️⃣ Choose Strategy")
 
 strategy_names = list(BEST_STRATEGIES.keys()) + ["custom"]
 strategy_labels = [BEST_STRATEGIES[s]["label"] for s in BEST_STRATEGIES] + ["🎛️ Custom — Build Your Own"]
@@ -246,7 +239,7 @@ choice_idx = st.sidebar.radio(
 selected_strategy = strategy_names[choice_idx]
 
 st.sidebar.markdown("---")
-st.sidebar.subheader("3️⃣ Compare Strategies")
+st.sidebar.subheader("2️⃣ Compare Strategies")
 compare_mode = st.sidebar.checkbox("Show comparison across ALL strategies", value=False)
 
 # Build params for selected strategy (with custom override)
