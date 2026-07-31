@@ -168,7 +168,7 @@ def calculate_metrics(df):
     ann_strategy = ((1 + total_strategy / 100) ** (1 / years) - 1) * 100 if years > 0 else 0
 
     vol_strategy = clean["net_return"].std() * np.sqrt(252) * 100
-    sharpe = ann_strategy / vol_strategy * 100 if vol_strategy > 0 else 0
+    sharpe = ann_strategy / vol_strategy if vol_strategy > 0 else 0
 
     cum = clean["cum_strategy"]
     running_max = cum.expanding().max()
@@ -179,7 +179,7 @@ def calculate_metrics(df):
     active_days = (clean["position"] != 0).sum()
     win_rate = wins / active_days * 100 if active_days > 0 else 0
 
-    calmar = total_strategy / abs(max_dd) if max_dd != 0 else 0
+    calmar = ann_strategy / abs(max_dd) if max_dd != 0 else 0
 
     avg_position = clean["position"].abs().mean()
     max_position = clean["position"].abs().max()
@@ -301,7 +301,7 @@ st.caption(f"Currently viewing: **{title_label}**  |  Bull `{params['bull']}` ·
 c1, c2, c3, c4, c5, c6 = st.columns(6)
 c1.metric("Total Return", f"{metrics['total_return']:.1f}%", f"{metrics['excess_return']:+.1f}% vs B&H")
 c2.metric("Annualized Return", f"{metrics['annual_return']:.2f}%")
-c3.metric("Sharpe (proxy)", f"{metrics['sharpe']:.1f}")
+c3.metric("Sharpe Ratio", f"{metrics['sharpe']:.2f}")
 c4.metric("Max Drawdown", f"{metrics['max_drawdown']:.2f}%")
 c5.metric("Calmar Ratio", f"{metrics['calmar']:.2f}")
 c6.metric("Win Rate", f"{metrics['win_rate']:.1f}%")
