@@ -454,9 +454,7 @@ with tab5:
         display_cols = ["total_return", "annual_return", "volatility", "sharpe",
                          "max_drawdown", "win_rate", "calmar", "excess_return"]
         st.dataframe(
-            comp_df[display_cols].style.format("{:.2f}").background_gradient(
-                subset=["total_return", "sharpe", "calmar"], cmap="Greens"
-            ).background_gradient(subset=["max_drawdown"], cmap="Reds_r"),
+            comp_df[display_cols].style.format("{:.2f}"),
             use_container_width=True,
         )
 
